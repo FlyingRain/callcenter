@@ -9,16 +9,23 @@ let router = createRouter({
             component: () => import('@/pages/index.vue')
         },
         {
-            path: '/record',
-            name: 'record',
-            component: () => import('@/pages/record.vue')
+            path: '/callwindow',
+            name: 'callwindow',
+            component: () => import('@/components/callwindow.vue')
         },
         {
             path: '/login',
             name: 'login',
-            component: () => import('@/pages/login.vue')
+            component: () => import('@/pages/login.vue'),
+            children: [
+                {
+                    path: 'record',
+                    name: 'record',
+                    component: () => import('@/pages/record.vue')
+                }
+            ]
         }
-    ]
-})
+        ]
+    })
 
 export default router
