@@ -1,9 +1,9 @@
 import {ref} from 'vue'
 
-export default function (draggable) {
+export default function (draggable: any) {
     const dragStartPosition = {x: 0, y: 0};
 
-    function dragStart(event) {  // 阻止默认的mousedown事件，防止选中文字等
+    function dragStart(event: any) {  // 阻止默认的mousedown事件，防止选中文字等
         event.preventDefault();
 
         // 保存初始位置
@@ -26,7 +26,7 @@ export default function (draggable) {
         document.removeEventListener('touchend', dragEnd);
     }
 
-    function dragMove(event) {
+    function dragMove(event: any) {
         // 计算新位置
         const x = event.clientX - dragStartPosition.x;
         const y = event.clientY - dragStartPosition.y;

@@ -13,31 +13,33 @@
 
 <script setup lang="ts">
 import {ref} from 'vue';
-import useDrag from '@/components/drag/dragUtil'
+import useDrag from '@/hooks/drag/dragUtil'
+import JsSIP from 'jssip'
+import {URI} from "jssip";
+import useCall from '@/hooks/call/useCall'
 
 const draggable = ref(null)
 const {dragStart} = useDrag(draggable)
-import JsSIP from 'jssip'
-import {c} from "vite/dist/node/types.d-aGj9QkWt";
 
-var socket = new JsSIP.WebSocketInterface('ws:/192.168.100.197:5066');
+
+
+var socket = new JsSIP.WebSocketInterface('ws:/192.168.0.111:5066');
+let uri = new URI("sip", '1003', '192.168.0.116',5066);
+
+console.log(uri.toString())
 var configuration = {
   sockets: [socket],
-  uri: 'sip:1003@172.17.0.2',
+  uri: uri.toString(),
   password: '1234',
+  contact_uri: '',
   register: true
 };
-var coolPhone = new JsSIP.UA(configuration);
-coolPhone.on('registered', function (e) {
-  console.log('registered!');
-});
-coolPhone.on('unregistered', function (e) { /* Your code here */
-});
-coolPhone.on('registrationFailed', function (e) {
-  console.log('registrationFailed!');
-  console.log(e);
-});
-coolPhone.start()
+uri.setParam('transport','ws')
+configuration.contact_uri = uri.toString()
+
+const {makeCall}  = useCall(configuration)
+
+let callSession = makeCall('sip:9196@192.168.0.116')
 </script>
 
 

@@ -39,6 +39,7 @@
 }
 .view{
   min-height: 100vh;
+  min-width: 100vw;
   background-color: sandybrown;
 }
 </style>
