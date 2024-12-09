@@ -3,8 +3,20 @@
   <div class="callwindow-container">
 
     <div ref="draggable" class="draggable" @mousedown="dragStart" @touchstart="dragStart">
-      <span>阿森松</span>
-      <span style="color: green"> 在线</span>
+      <el-row :gutter="12">
+        <el-col :span="4">
+          <span>阿森松</span>
+        </el-col>
+        <el-col :span="4">
+          <span style="color: green"> 在线</span>
+        </el-col>
+        <el-col :span="12">
+          <el-input size="small" type="text" placeholder="请输入号码" v-model="number"/>
+        </el-col>
+        <el-col :span="3">
+          <el-button size="small" type="primary" @click="makeCall(number)">呼叫</el-button>
+        </el-col>
+      </el-row>
     </div>
   </div>
 
@@ -39,7 +51,9 @@ configuration.contact_uri = uri.toString()
 
 const {makeCall}  = useCall(configuration)
 
-let callSession = makeCall('sip:9196@192.168.0.116')
+let number = ref('')
+
+// let callSession = makeCall('sip:1002@192.168.0.116')
 </script>
 
 
@@ -53,7 +67,7 @@ let callSession = makeCall('sip:9196@192.168.0.116')
 
 .draggable {
   position: absolute;
-  width: 200px;
+  width: 380px;
   cursor: move;
   background-color: skyblue;
 }

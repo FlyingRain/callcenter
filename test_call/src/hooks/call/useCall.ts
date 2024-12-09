@@ -20,7 +20,7 @@ export default function (callConfig: any) {
     // 当有呼入或者呼出的事件时触发
     coolPhone.on('newRTCSession', function (e: any) {
         if (e.session._direction == 'outgoing') {
-            console.log('call income!');
+            console.log('call outcome!');
         } else {
             console.log('call income!', e.session._direction);
         }
