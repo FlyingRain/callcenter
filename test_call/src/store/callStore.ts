@@ -1,13 +1,18 @@
 import {defineStore} from "pinia";
+import type {RTCSession} from "jssip/lib/RTCSession";
 
 export const callStore = defineStore("callStore", () => {
 
-    let callSession = undefined
+    let callSession: any = undefined;
 
     function setCallSession(session: any) {
         callSession = session
     }
 
-    return {callSession, setCallSession}
+    function getCallSession() {
+        return callSession
+    }
+
+    return {callSession, setCallSession,getCallSession}
 
 })

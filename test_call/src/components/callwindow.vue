@@ -10,15 +10,21 @@
         <el-col :span="4">
           <span style="color: green"> 在线</span>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="10">
           <el-input size="small" type="text" placeholder="请输入号码" v-model="number"/>
         </el-col>
         <el-col :span="3">
           <el-button size="small" type="primary" @click="makeCall(number)">呼叫</el-button>
         </el-col>
+        <el-col :span="3">
+          <el-button size="small" type="primary" @click="hangup">挂断</el-button>
+        </el-col>
       </el-row>
     </div>
-  </div>
+    <div>
+      <audio ref="audio"></audio>
+    </div>
+  </DIV>
 
 
 </template>
@@ -29,14 +35,14 @@ import useDrag from '@/hooks/drag/dragUtil'
 import JsSIP from 'jssip'
 import {URI} from "jssip";
 import useCall from '@/hooks/call/useCall'
+import {callStore} from "@/store/callStore";
 
 const draggable = ref(null)
 const {dragStart} = useDrag(draggable)
 
 
-
-var socket = new JsSIP.WebSocketInterface('ws:/192.168.0.111:5066');
-let uri = new URI("sip", '1003', '192.168.0.116',5066);
+var socket = new JsSIP.WebSocketInterface('ws:/192.168.100.197:5066');
+let uri = new URI("sip", '1003', '192.168.100.197', 5066);
 
 console.log(uri.toString())
 var configuration = {
@@ -46,12 +52,19 @@ var configuration = {
   contact_uri: '',
   register: true
 };
-uri.setParam('transport','ws')
+uri.setParam('transport', 'ws')
 configuration.contact_uri = uri.toString()
+let audio = ref(null)
 
-const {makeCall}  = useCall(configuration)
+const {makeCall} = useCall(configuration, audio)
 
 let number = ref('')
+
+function hangup() {
+  const {getCallSession} = callStore()
+  let session = getCallSession()
+  session.terminate()
+}
 
 // let callSession = makeCall('sip:1002@192.168.0.116')
 </script>
@@ -67,7 +80,7 @@ let number = ref('')
 
 .draggable {
   position: absolute;
-  width: 380px;
+  width: 400px;
   cursor: move;
   background-color: skyblue;
 }

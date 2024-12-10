@@ -1,10 +1,13 @@
 import JsSIP from "jssip";
+import {callStore} from "@/store/callStore";
+import type {OutgoingAckEvent} from "jssip/lib/RTCSession";
 import type {RTCSessionEvent} from "jssip/lib/UA";
+import type {Ref} from "vue";
 
-export default function (callConfig: any) {
+export default function (callConfig: any, audioRef: Ref) {
 
     let coolPhone = new JsSIP.UA(callConfig);
-
+    const {setCallSession, getCallSession} = callStore()
     coolPhone.on('registered', function (e) {
         console.log('registered!');
     });
@@ -18,13 +21,15 @@ export default function (callConfig: any) {
     });
 
     // 当有呼入或者呼出的事件时触发
-    coolPhone.on('newRTCSession', function (e: any) {
-        if (e.session._direction == 'outgoing') {
+    coolPhone.on('newRTCSession', function (e: RTCSessionEvent) {
+        const {originator, session} = e
+        if (originator === 'local') {
             console.log('call outcome!');
-        } else {
-            console.log('call income!', e.session._direction);
+        } else if (originator === 'remote') {
+            console.log('call income!', originator);
         }
         console.log('newRTCSession!', e);
+        setCallSession(session)
     })
 
     coolPhone.start()
@@ -42,16 +47,31 @@ export default function (callConfig: any) {
             'ended': (event: any) => {
                 console.log('ended', event);
             },
-            'confirmed': (event: any) => {
-                console.log('confirmed', event);
+            'confirmed': (event: OutgoingAckEvent) => {
+                let callSession = getCallSession()
+                const {connection} = callSession
+                onCallOut(connection)
             }
-        }
+        };
         let options = {
             'eventHandlers': eventHandles,
-            'sessionTimersExpires':120,
+            'sessionTimersExpires': 120,
             'mediaConstraints': {'audio': true, 'video': false}
         }
-        return coolPhone.call(number, options);
+        coolPhone.call(number, options)
+    }
+
+
+    function onCallOut(connection: RTCPeerConnection) {
+        const stream = new MediaStream();
+        const receivers = connection.getReceivers();
+        if (receivers) {
+            receivers.forEach(rec => stream.addTrack(rec.track));
+        }
+        if (audioRef.value) {
+            audioRef.value.srcObject = stream;
+            audioRef.value.play();
+        }
     }
 
     return {makeCall}
