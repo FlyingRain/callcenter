@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ESLEventListener implements IEslEventListener {
+
+
     @Override
     public void eventReceived(String addr, EslEvent event) {
 

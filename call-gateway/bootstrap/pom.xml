@@ -18,6 +18,15 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.flyingrain</groupId>
+            <artifactId>domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.flyingrain</groupId>
+            <artifactId>endpoint</artifactId>
+        </dependency>
+
 
     </dependencies>
 </project>

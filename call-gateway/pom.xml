@@ -20,11 +20,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <freeswitch.esl.version>2.1.0</freeswitch.esl.version>
         <spring.boot.version>3.4.0</spring.boot.version>
+        <project.version>1.0-SNAPSHOT</project.version>
+        <logback.version>1.5.12</logback.version>
     </properties>
 
 
     <dependencyManagement>
         <dependencies>
+            <!-- spring dependency start -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
@@ -37,13 +40,48 @@
                 <scope>test</scope>
             </dependency>
 
+            <!-- spring dependency end -->
 
+            <!-- logback start -->
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
+            <!-- logback end -->
             <dependency>
                 <groupId>link.thingscloud</groupId>
                 <artifactId>freeswitch-esl</artifactId>
                 <version>${freeswitch.esl.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-classic</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-core</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
+
+            <!-- project modules -->
+            <dependency>
+                <groupId>com.flyingrain</groupId>
+                <artifactId>domain</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.flyingrain</groupId>
+                <artifactId>endpoint</artifactId>
+                <version>${project.version}</version>
+
+            </dependency>
+
+
+            <!-- project modules -->
 
         </dependencies>
 
