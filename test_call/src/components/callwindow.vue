@@ -24,6 +24,10 @@
     <div>
       <audio ref="audio"></audio>
     </div>
+    <div>
+      <el-button type="primary" @click="callTips">弹窗</el-button>
+    </div>
+    <calltip ref="tip"></calltip>
   </DIV>
 
 
@@ -36,10 +40,10 @@ import JsSIP from 'jssip'
 import {URI} from "jssip";
 import useCall from '@/hooks/call/useCall'
 import {callStore} from "@/store/callStore";
+import calltip from "@/components/calltip.vue"
 
 const draggable = ref(null)
 const {dragStart} = useDrag(draggable)
-
 
 var socket = new JsSIP.WebSocketInterface('ws:/192.168.100.197:5066');
 let uri = new URI("sip", '1003', '192.168.100.197', 5066);
@@ -64,6 +68,14 @@ function hangup() {
   const {getCallSession} = callStore()
   let session = getCallSession()
   session.terminate()
+}
+
+let tip = ref()
+
+function callTips(){
+  if(tip.value){
+    tip.value.tips_pop(number,"up")
+  }
 }
 
 // let callSession = makeCall('sip:1002@192.168.0.116')

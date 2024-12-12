@@ -4,35 +4,40 @@ import type {OutgoingAckEvent} from "jssip/lib/RTCSession";
 import type {RTCSessionEvent} from "jssip/lib/UA";
 import type {Ref} from "vue";
 
-export default function (callConfig: any, audioRef: Ref) {
+export default function (callConfig: any, audioRef: Ref, callIn: any) {
+    const {setCallSession, getCallSession, setUA, getUA} = callStore()
+    let coolPhone = getUA()
+    if (!coolPhone && callConfig) {
+        coolPhone = new JsSIP.UA(callConfig);
+        setUA(coolPhone)
+        coolPhone.on('registered', function (e) {
+            console.log('registered!');
+        });
 
-    let coolPhone = new JsSIP.UA(callConfig);
-    const {setCallSession, getCallSession} = callStore()
-    coolPhone.on('registered', function (e) {
-        console.log('registered!');
-    });
+        coolPhone.on('unregistered', function (e) { /* Your code here */
+        });
 
-    coolPhone.on('unregistered', function (e) { /* Your code here */
-    });
+        coolPhone.on('registrationFailed', function (e) {
+            console.log('registrationFailed!');
+            console.log(e);
+        });
 
-    coolPhone.on('registrationFailed', function (e) {
-        console.log('registrationFailed!');
-        console.log(e);
-    });
+        // 当有呼入或者呼出的事件时触发
+        coolPhone.on('newRTCSession', function (e: RTCSessionEvent) {
+            const {originator, session} = e
+            if (originator === 'local') {
+                console.log('call outcome!');
+            } else if (originator === 'remote') {
+                console.log("call in ", session)
+                callIn()
+                console.log('call income!', originator);
+            }
+            console.log('newRTCSession!', e);
+            setCallSession(session)
+        })
 
-    // 当有呼入或者呼出的事件时触发
-    coolPhone.on('newRTCSession', function (e: RTCSessionEvent) {
-        const {originator, session} = e
-        if (originator === 'local') {
-            console.log('call outcome!');
-        } else if (originator === 'remote') {
-            console.log('call income!', originator);
-        }
-        console.log('newRTCSession!', e);
-        setCallSession(session)
-    })
-
-    coolPhone.start()
+        coolPhone.start()
+    }
 
     function makeCall(number: string) {
         let eventHandles = {
@@ -74,5 +79,15 @@ export default function (callConfig: any, audioRef: Ref) {
         }
     }
 
-    return {makeCall}
+    function accept() {
+        let currentSession = getCallSession()
+        currentSession.answer({
+            mediaConstraints: {audio: true, video: false},
+            pcConfig: {
+                iceServers: [{urls: "stun:stun.l.google.com:19302"}]
+            }
+        })
+    }
+
+    return {makeCall, accept}
 }

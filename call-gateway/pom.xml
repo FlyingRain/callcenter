@@ -22,6 +22,7 @@
         <spring.boot.version>3.4.0</spring.boot.version>
         <project.version>1.0-SNAPSHOT</project.version>
         <logback.version>1.5.12</logback.version>
+        <lombok.version>1.18.36</lombok.version>
     </properties>
 
 
@@ -50,6 +51,8 @@
             </dependency>
 
             <!-- logback end -->
+
+            <!-- freeswitch client start  -->
             <dependency>
                 <groupId>link.thingscloud</groupId>
                 <artifactId>freeswitch-esl</artifactId>
@@ -65,6 +68,18 @@
                     </exclusion>
                 </exclusions>
             </dependency>
+            <!-- freeswitch client end  -->
+
+            <!-- lombok -->
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- lombok -->
 
 
             <!-- project modules -->
@@ -79,7 +94,6 @@
                 <version>${project.version}</version>
 
             </dependency>
-
 
             <!-- project modules -->
 
@@ -98,5 +112,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 </project>

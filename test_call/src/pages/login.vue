@@ -5,7 +5,7 @@
 <template>
   <div class="content">
     <div class="sideBar">
-      <el-menu default-active="" router="true">
+      <el-menu default-active="" :router="true">
         asd
         <el-sub-menu index="1">
           <template #title>
