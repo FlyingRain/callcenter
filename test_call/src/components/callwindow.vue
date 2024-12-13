@@ -14,7 +14,7 @@
           <el-input size="small" type="text" placeholder="请输入号码" v-model="number"/>
         </el-col>
         <el-col :span="3">
-          <el-button size="small" type="primary" @click="makeCall(number)">呼叫</el-button>
+          <el-button size="small" type="primary" @click="call(number)">呼叫</el-button>
         </el-col>
         <el-col :span="3">
           <el-button size="small" type="primary" @click="hangup">挂断</el-button>
@@ -80,6 +80,9 @@ function callTips() {
   }
 }
 
+function call(number:string){
+  makeCall(number,audio)
+}
 // let callSession = makeCall('sip:1002@192.168.0.116')
 </script>
 
