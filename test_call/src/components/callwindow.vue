@@ -28,7 +28,7 @@
       <el-button type="primary" @click="callTips">弹窗</el-button>
     </div>
     <calltip ref="tip"></calltip>
-  </DIV>
+  </div>
 
 
 </template>
@@ -42,7 +42,7 @@ import useCall from '@/hooks/call/useCall'
 import {callStore} from "@/store/callStore";
 import calltip from "@/components/calltip.vue"
 
-const draggable = ref(null)
+const draggable = ref()
 const {dragStart} = useDrag(draggable)
 
 var socket = new JsSIP.WebSocketInterface('ws:/192.168.100.197:5066');
