@@ -47,6 +47,7 @@ const {dragStart} = useDrag(draggable)
 
 var socket = new JsSIP.WebSocketInterface('ws:/192.168.100.197:5066');
 let uri = new URI("sip", '1003', '192.168.100.197', 5066);
+let tip = ref()
 
 console.log(uri.toString())
 var configuration = {
@@ -60,8 +61,10 @@ uri.setParam('transport', 'ws')
 configuration.contact_uri = uri.toString()
 let audio = ref(null)
 
-const {makeCall} = useCall(configuration, audio)
-
+const {connectFS, makeCall} = useCall()
+connectFS(configuration, () => {
+  tip.value.tips_pop("up")
+})
 let number = ref('')
 
 function hangup() {
@@ -70,11 +73,10 @@ function hangup() {
   session.terminate()
 }
 
-let tip = ref()
 
-function callTips(){
-  if(tip.value){
-    tip.value.tips_pop(number,"up")
+function callTips() {
+  if (tip.value) {
+    tip.value.tips_pop(number, "up")
   }
 }
 

@@ -5,7 +5,7 @@
         <span>来电：{{ phone }}</span>
       </div>
       <div class="option">
-        <el-button size="small" type="primary" @click="accept">接听</el-button>
+        <el-button size="small" type="primary" @click="acceptCall">接听</el-button>
         <el-button size="small" type="danger">挂断</el-button>
       </div>
 
@@ -17,7 +17,7 @@
 import {ref, onMounted} from "vue";
 import useCall from "@/hooks/call/useCall"
 
-const {accept} = useCall(null,ref(null),null)
+const {accept} = useCall()
 
 let show: number = 0, hide: number = 0;
 let MsgPop = ref();//获取窗口这个对象,即ID为winpop的对象
@@ -67,6 +67,10 @@ function changeH(str: string) {
   }
 }
 
+function acceptCall() {
+  accept()
+  tips_pop("","down")
+}
 
 
 defineExpose({tips_pop})

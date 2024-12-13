@@ -4,20 +4,21 @@ import type {OutgoingAckEvent} from "jssip/lib/RTCSession";
 import type {RTCSessionEvent} from "jssip/lib/UA";
 import type {Ref} from "vue";
 
-export default function (callConfig: any, audioRef: Ref, callIn: any) {
+export default function () {
     const {setCallSession, getCallSession, setUA, getUA} = callStore()
     let coolPhone = getUA()
-    if (!coolPhone && callConfig) {
+
+    function connectFS(callConfig: any, callIn: Function) {
         coolPhone = new JsSIP.UA(callConfig);
         setUA(coolPhone)
-        coolPhone.on('registered', function (e) {
+        coolPhone.on('registered', function (e: any) {
             console.log('registered!');
         });
 
-        coolPhone.on('unregistered', function (e) { /* Your code here */
+        coolPhone.on('unregistered', function (e: any) { /* Your code here */
         });
 
-        coolPhone.on('registrationFailed', function (e) {
+        coolPhone.on('registrationFailed', function (e: any) {
             console.log('registrationFailed!');
             console.log(e);
         });
@@ -39,7 +40,7 @@ export default function (callConfig: any, audioRef: Ref, callIn: any) {
         coolPhone.start()
     }
 
-    function makeCall(number: string) {
+    function makeCall(number: string, audioRef: Ref) {
         let eventHandles = {
             //  来电 振铃
             'progress': (event: any) => {
@@ -55,7 +56,7 @@ export default function (callConfig: any, audioRef: Ref, callIn: any) {
             'confirmed': (event: OutgoingAckEvent) => {
                 let callSession = getCallSession()
                 const {connection} = callSession
-                onCallOut(connection)
+                onCallOut(connection, audioRef)
             }
         };
         let options = {
@@ -67,7 +68,7 @@ export default function (callConfig: any, audioRef: Ref, callIn: any) {
     }
 
 
-    function onCallOut(connection: RTCPeerConnection) {
+    function onCallOut(connection: RTCPeerConnection, audioRef: Ref) {
         const stream = new MediaStream();
         const receivers = connection.getReceivers();
         if (receivers) {
@@ -82,12 +83,9 @@ export default function (callConfig: any, audioRef: Ref, callIn: any) {
     function accept() {
         let currentSession = getCallSession()
         currentSession.answer({
-            mediaConstraints: {audio: true, video: false},
-            pcConfig: {
-                iceServers: [{urls: "stun:stun.l.google.com:19302"}]
-            }
+            mediaConstraints: {audio: true, video: false}
         })
     }
 
-    return {makeCall, accept}
+    return {makeCall, accept,connectFS}
 }
