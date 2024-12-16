@@ -22,7 +22,7 @@ public class FreeswitchEndPoint {
     public void init() {
         InboundClientOption inboundClientOption = new InboundClientOption();
         inboundClientOption.addListener(eslEventListener);
-        inboundClientOption.addEvents("all");
+        inboundClientOption.addEvents("CHANNEL_HANGUP_COMPLETE","CHANNEL_ANSWER","BACKGROUND_JOB","CHANNEL_CREATE");
         ServerOption serverOption = new ServerOption("192.168.100.197", 8021);
         inboundClientOption.addServerOption(serverOption);
         NettyInboundClient nettyInboundClient = new NettyInboundClient(inboundClientOption);

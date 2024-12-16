@@ -18,18 +18,21 @@ public class ESLEventListener implements IEslEventListener {
     @Override
     public void eventReceived(String addr, EslEvent event) {
         logger.info("receive event:[{}],event:[{}]", addr, event);
-        Map<EslHeaders.Name,String> messageHeaders = event.getMessageHeaders();
-        Map<String,String> eventHeaders = event.getEventHeaders();
-        if(event.getEventName().equals("API")){
-            List<String> results = event.getEventBodyLines();
-            logger.info("results:[{}]", results);
-            logger.info("messageHeaders:[{}]", messageHeaders);
-            logger.info("eventHeaders:[{}]", eventHeaders);
-        }
+        Map<EslHeaders.Name, String> messageHeaders = event.getMessageHeaders();
+        Map<String, String> eventHeaders = event.getEventHeaders();
+        List<String> results = event.getEventBodyLines();
+        logger.info("results:[{}]", results);
+        logger.info("messageHeaders:[{}]", messageHeaders);
+        logger.info("eventHeaders:[{}]", eventHeaders);
     }
 
     @Override
     public void backgroundJobResultReceived(String addr, EslEvent event) {
         logger.info("receive background job event:[{}],event:[{}]", addr, event);
+        Map<EslHeaders.Name, String> messageHeaders = event.getMessageHeaders();
+        Map<String, String> eventHeaders = event.getEventHeaders();
+        logger.info("messageHeaders:[{}]", messageHeaders);
+        logger.info("eventHeaders:[{}]", eventHeaders);
+        logger.info("body:[{}]", event.getEventBodyLines());
     }
 }
