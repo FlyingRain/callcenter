@@ -27,7 +27,7 @@
     <div>
       <el-button type="primary" @click="callTips">弹窗</el-button>
     </div>
-    <calltip ref="tip"></calltip>
+    <calltip ref="tip" :audioRef="audio"></calltip>
   </div>
 
 
@@ -39,7 +39,6 @@ import useDrag from '@/hooks/drag/dragUtil'
 import JsSIP from 'jssip'
 import {URI} from "jssip";
 import useCall from '@/hooks/call/useCall'
-import {callStore} from "@/store/callStore";
 import calltip from "@/components/calltip.vue"
 
 const draggable = ref()
@@ -49,7 +48,6 @@ var socket = new JsSIP.WebSocketInterface('ws:/192.168.100.197:5066');
 let uri = new URI("sip", '1003', '192.168.100.197', 5066);
 let tip = ref()
 
-console.log(uri.toString())
 var configuration = {
   sockets: [socket],
   uri: uri.toString(),
@@ -59,19 +57,13 @@ var configuration = {
 };
 uri.setParam('transport', 'ws')
 configuration.contact_uri = uri.toString()
-let audio = ref(null)
+let audio = ref()
 
-const {connectFS, makeCall} = useCall()
-connectFS(configuration, () => {
-  tip.value.tips_pop("up")
+const {connectFS, makeCall, hangup} = useCall()
+connectFS(configuration, (callInNumber: string) => {
+  tip.value.tips_pop(callInNumber, "up")
 })
 let number = ref('')
-
-function hangup() {
-  const {getCallSession} = callStore()
-  let session = getCallSession()
-  session.terminate()
-}
 
 
 function callTips() {
@@ -80,9 +72,10 @@ function callTips() {
   }
 }
 
-function call(number:string){
-  makeCall(number,audio)
+function call(number: string) {
+  makeCall(number, audio.value)
 }
+
 // let callSession = makeCall('sip:1002@192.168.0.116')
 </script>
 

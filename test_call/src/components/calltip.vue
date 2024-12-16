@@ -6,7 +6,7 @@
       </div>
       <div class="option">
         <el-button size="small" type="primary" @click="acceptCall">接听</el-button>
-        <el-button size="small" type="danger">挂断</el-button>
+        <el-button size="small" type="danger" @click="hangupCall">挂断</el-button>
       </div>
 
     </div>
@@ -17,13 +17,16 @@
 import {ref, onMounted} from "vue";
 import useCall from "@/hooks/call/useCall"
 
-const {accept} = useCall()
+const {accept,hangup} = useCall()
+const props = defineProps(["audioRef"])
 
 let show: number = 0, hide: number = 0;
 let MsgPop = ref();//获取窗口这个对象,即ID为winpop的对象
 let phone = ref('');
 
 function tips_pop(tel: string, direction: string): void {
+  console.log('callin start to pop:', MsgPop);
+  console.log('callin start to pop:', tel,direction);
   if (!MsgPop) {
     return
   }
@@ -68,10 +71,15 @@ function changeH(str: string) {
 }
 
 function acceptCall() {
-  accept()
+  console.log('audio:',props.audioRef)
+  accept(props.audioRef)
   tips_pop("","down")
 }
 
+function hangupCall(){
+  hangup()
+  tips_pop("","down")
+}
 
 defineExpose({tips_pop})
 

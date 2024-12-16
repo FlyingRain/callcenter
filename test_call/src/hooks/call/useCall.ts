@@ -30,17 +30,18 @@ export default function () {
                 console.log('call outcome!');
             } else if (originator === 'remote') {
                 console.log("call in ", session)
-                callIn()
+                callIn((session as any)._request?.from.uri.user)
                 console.log('call income!', originator);
             }
             console.log('newRTCSession!', e);
             setCallSession(session)
         })
 
+
         coolPhone.start()
     }
 
-    function makeCall(number: string, audioRef: Ref) {
+    function makeCall(number: string, audioRef: any) {
         let eventHandles = {
             //  来电 振铃
             'progress': (event: any) => {
@@ -54,9 +55,7 @@ export default function () {
                 console.log('ended', event);
             },
             'confirmed': (event: OutgoingAckEvent) => {
-                let callSession = getCallSession()
-                const {connection} = callSession
-                onCallOut(connection, audioRef)
+                bindCallStream(audioRef)
             }
         };
         let options = {
@@ -68,24 +67,54 @@ export default function () {
     }
 
 
-    function onCallOut(connection: RTCPeerConnection, audioRef: Ref) {
+    function bindCallStream(audioRef: any) {
+        let callSession = getCallSession()
+        const {connection} = callSession
         const stream = new MediaStream();
         const receivers = connection.getReceivers();
         if (receivers) {
-            receivers.forEach(rec => stream.addTrack(rec.track));
+            receivers.forEach((rec: any) => stream.addTrack(rec.track));
         }
-        if (audioRef.value) {
-            audioRef.value.srcObject = stream;
-            audioRef.value.play();
+        if (audioRef) {
+            audioRef.srcObject = stream;
+            audioRef.play();
         }
     }
 
-    function accept() {
+    function accept(audioRef:any) {
         let currentSession = getCallSession()
         currentSession.answer({
             mediaConstraints: {audio: true, video: false}
         })
+        currentSession.on('ended', function (e: any) {
+            console.log('callin ended!', e)
+        })
+
+        currentSession.on('progress', function(e:any) {
+            console.log('callin progress', e);
+            // 获取自定义变量
+            let vars = e.data.headers['Variables'];
+            if (vars) {
+                // 解析变量
+                let customVars = vars.split(';').reduce((acc:any, pair:any) => {
+                    let [key, value] = pair.split('=');
+                    acc[key] = value;
+                    return acc;
+                }, {});
+                console.log('自定义变量:', customVars);
+            }
+        });
+        currentSession.on('confirmed', function (e: any) {
+            console.log('callin confirmed!', e)
+            bindCallStream(audioRef)
+        })
     }
 
-    return {makeCall, accept,connectFS}
+    function hangup() {
+        const {getCallSession} = callStore()
+        let session = getCallSession()
+        session.terminate()
+    }
+
+    return {makeCall, accept, connectFS, hangup}
 }
