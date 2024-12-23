@@ -1,4 +1,4 @@
-package com.flyingrain.freeswitch.eventlistener;
+package com.flyingrain.freeswitch.inbound.eventlistener;
 
 import link.thingscloud.freeswitch.esl.IEslEventListener;
 import link.thingscloud.freeswitch.esl.transport.event.EslEvent;

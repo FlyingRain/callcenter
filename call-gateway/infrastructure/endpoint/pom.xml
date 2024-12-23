@@ -23,6 +23,13 @@
             <groupId>link.thingscloud</groupId>
             <artifactId>freeswitch-esl</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.flyingrain</groupId>
+            <artifactId>domain</artifactId>
+        </dependency>
+
+
     </dependencies>
 
 
