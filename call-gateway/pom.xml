@@ -23,6 +23,7 @@
         <project.version>1.0-SNAPSHOT</project.version>
         <logback.version>1.5.12</logback.version>
         <lombok.version>1.18.36</lombok.version>
+        <apache.common.lang.version>3.17.0</apache.common.lang.version>
     </properties>
 
 
@@ -92,10 +93,16 @@
                 <groupId>com.flyingrain</groupId>
                 <artifactId>endpoint</artifactId>
                 <version>${project.version}</version>
-
             </dependency>
 
             <!-- project modules -->
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache.common.lang.version}</version>
+            </dependency>
+
 
         </dependencies>
 
@@ -106,6 +113,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

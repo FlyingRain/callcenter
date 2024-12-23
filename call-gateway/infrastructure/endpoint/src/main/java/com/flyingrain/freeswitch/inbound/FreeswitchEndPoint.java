@@ -1,4 +1,4 @@
-package com.flyingrain.freeswitch.starter;
+package com.flyingrain.freeswitch.inbound;
 
 
 import com.flyingrain.freeswitch.eventlistener.ESLEventListener;
@@ -18,7 +18,7 @@ public class FreeswitchEndPoint {
     @Autowired
     private ESLEventListener eslEventListener;
 
-    @PostConstruct
+//    @PostConstruct
     public void init() {
         InboundClientOption inboundClientOption = new InboundClientOption();
         inboundClientOption.addListener(eslEventListener);
