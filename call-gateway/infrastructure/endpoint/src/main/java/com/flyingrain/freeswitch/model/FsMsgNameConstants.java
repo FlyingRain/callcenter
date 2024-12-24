@@ -26,4 +26,8 @@ public class FsMsgNameConstants {
 
     public static final String CHANNEL_HANGUP_TIME = "Channel-Channel-Hangup-Time";
 
+    public static final String CONTENT_TYPE =  "Content-Type";
+
+    public static final String REPLY_TEXT = "Reply-Text";
+
 }
