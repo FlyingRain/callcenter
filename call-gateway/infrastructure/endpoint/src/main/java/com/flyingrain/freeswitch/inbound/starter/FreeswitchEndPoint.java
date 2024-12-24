@@ -18,7 +18,7 @@ public class FreeswitchEndPoint {
     @Autowired
     private ESLEventListener eslEventListener;
 
-    @PostConstruct
+//    @PostConstruct
     public void init() {
         InboundClientOption inboundClientOption = new InboundClientOption();
         inboundClientOption.addListener(eslEventListener);

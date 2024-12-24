@@ -12,6 +12,7 @@
         <module>bootstrap</module>
         <module>domain</module>
         <module>infrastructure/endpoint</module>
+        <module>infrastructure/repository</module>
     </modules>
 
     <properties>
@@ -24,6 +25,8 @@
         <logback.version>1.5.12</logback.version>
         <lombok.version>1.18.36</lombok.version>
         <apache.common.lang.version>3.17.0</apache.common.lang.version>
+        <mybatis.version>3.0.4</mybatis.version>
+        <mysql.connect.version>9.1.0</mysql.connect.version>
     </properties>
 
 
@@ -95,6 +98,12 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.flyingrain</groupId>
+                <artifactId>repository</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!-- project modules -->
 
             <dependency>
@@ -102,6 +111,19 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>${apache.common.lang.version}</version>
             </dependency>
+
+            <!-- mysql connect start -->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
+                <version>${mysql.connect.version}</version>
+            </dependency>
+            <!-- mysql connect end -->
 
 
         </dependencies>

@@ -1,5 +1,6 @@
 package com.flyingrain.freeswitch.outbound;
 
+import com.flyingrain.freeswitch.adapter.FreeswitchCallAdapter;
 import com.flyingrain.freeswitch.outbound.configs.OutboundServerConfig;
 import com.flyingrain.freeswitch.outbound.handlers.FsOutboundHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -12,6 +13,7 @@ import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -19,11 +21,14 @@ import java.nio.charset.Charset;
 
 @Slf4j
 @Component
-public class FsOutBoundServer {
+public class FsOutBoundServer   {
 
     private ServerBootstrap bootstrap;
 
     private OutboundServerConfig config;
+
+    @Autowired
+    private FreeswitchCallAdapter callAdapter;
 
 
     @PostConstruct
@@ -36,16 +41,17 @@ public class FsOutBoundServer {
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ch.pipeline().addLast("stringEncode", new StringEncoder());
                         ch.pipeline().addLast("lineDecoder", new LineBasedFrameDecoder(8192));
-                        ch.pipeline().addLast("myHandler", new ChannelInboundHandlerAdapter() {
-                            @Override
-                            public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-                                ByteBuf byteBuf = (ByteBuf) msg;
-                                log.info(byteBuf.readCharSequence(byteBuf.readableBytes(), Charset.defaultCharset()).toString());
-                                log.info("----------------");
-                                ctx.fireChannelRead(msg);
-                            }
-                        });
-                        ch.pipeline().addLast("myHandler2", new FsOutboundHandler());
+//                        ch.pipeline().addLast("myHandler", new ChannelInboundHandlerAdapter() {
+//                            @Override
+//                            public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+//                                ByteBuf byteBuf = (ByteBuf) msg;
+//                                ByteBuf temp = byteBuf.copy();
+//                                log.info(temp.readCharSequence(temp.readableBytes(), Charset.defaultCharset()).toString());
+//                                log.info("----------------");
+//                                ctx.fireChannelRead(msg);
+//                            }
+//                        });
+                        ch.pipeline().addLast("eslOutboundHandler", new FsOutboundHandler(callAdapter));
                     }
                 }).bind(8081);
     }
