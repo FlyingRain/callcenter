@@ -38,7 +38,7 @@ public class FsOutboundHandler extends ChannelInboundHandlerAdapter implements F
 
     private Channel currentChannel = null;
 
-    private ThreadPoolExecutor executor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors()*2, Runtime.getRuntime().availableProcessors()*4, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1024));
+    private ThreadPoolExecutor executor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors() * 2, Runtime.getRuntime().availableProcessors() * 4, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1024));
 
     public FsOutboundHandler(FsCallInListener callInListener) {
         this.callInListener = callInListener;
@@ -61,9 +61,8 @@ public class FsOutboundHandler extends ChannelInboundHandlerAdapter implements F
         if (READ_STATUS == FsMessageReadStatus.COMPLETE) {
             if ("CHANNEL_DATA".equals(headers.get(FsMsgNameConstants.EVENT_NAME))) {
                 FsEvent fsEvent = FsEvent.fromMap(headers);
-                executor.execute(()-> callInListener.onCallIn(fsEvent, this));
-            }
-            if ("command/reply".equals(headers.get(FsMsgNameConstants.CONTENT_TYPE))) {
+                executor.execute(() -> callInListener.onCallIn(fsEvent, this));
+            } else if ("command/reply".equals(headers.get(FsMsgNameConstants.CONTENT_TYPE))) {
                 results.offer(FsExecuteResult.fromMap(headers));
             }
             headers.clear();
@@ -74,6 +73,7 @@ public class FsOutboundHandler extends ChannelInboundHandlerAdapter implements F
 
     private void readHead(ByteBuf byteBuf) {
         String headerParam = byteBuf.readCharSequence(byteBuf.readableBytes(), Charset.defaultCharset()).toString();
+        log.info(headerParam);
         if (StringUtils.isNotBlank(headerParam)) {
             String[] keyValues = headerParam.split(":");
             if (keyValues.length != 2) {

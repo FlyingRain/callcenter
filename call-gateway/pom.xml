@@ -13,6 +13,7 @@
         <module>domain</module>
         <module>infrastructure/endpoint</module>
         <module>infrastructure/repository</module>
+        <module>controller</module>
     </modules>
 
     <properties>
@@ -104,6 +105,12 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.flyingrain</groupId>
+                <artifactId>controller</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!-- project modules -->
 
             <dependency>
@@ -123,6 +130,7 @@
                 <artifactId>mysql-connector-j</artifactId>
                 <version>${mysql.connect.version}</version>
             </dependency>
+
             <!-- mysql connect end -->
 
 

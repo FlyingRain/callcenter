@@ -8,8 +8,13 @@ import org.springframework.stereotype.Component;
 public class FsModelTransfer {
 
 
-    public CallInInfo transfer(FsEvent fsEvent){
+    public CallInInfo transfer(FsEvent fsEvent) {
         CallInInfo callInInfo = new CallInInfo();
+        callInInfo.setPhone(fsEvent.getCallerNumber());
+        if ("1002".equals(fsEvent.getCallerNumber())) {
+            callInInfo.setPhone("17626189012");
+        }
+        callInInfo.setDestNumber(fsEvent.getChannelDestNumber());
         return callInInfo;
     }
 

@@ -11,4 +11,6 @@ public class UserInfo {
 
     private String registerNumber;
 
+    private String showNumber;
+
 }

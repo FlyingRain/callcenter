@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>bootstrap</artifactId>
+    <artifactId>controller</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -22,18 +22,6 @@
             <groupId>com.flyingrain</groupId>
             <artifactId>domain</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.flyingrain</groupId>
-            <artifactId>endpoint</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.flyingrain</groupId>
-            <artifactId>repository</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.flyingrain</groupId>
-            <artifactId>controller</artifactId>
-        </dependency>
-
     </dependencies>
+
 </project>

@@ -18,17 +18,19 @@ public class FreeswitchEndPoint {
     @Autowired
     private ESLEventListener eslEventListener;
 
-//    @PostConstruct
+    private NettyInboundClient nettyInboundClient;
+
+    @PostConstruct
     public void init() {
         InboundClientOption inboundClientOption = new InboundClientOption();
         inboundClientOption.addListener(eslEventListener);
-        inboundClientOption.addEvents("CHANNEL_HANGUP_COMPLETE","CHANNEL_ANSWER","BACKGROUND_JOB","CHANNEL_CREATE");
+        inboundClientOption.addEvents("CHANNEL_HANGUP_COMPLETE", "CHANNEL_ANSWER", "BACKGROUND_JOB", "CHANNEL_CREATE");
         ServerOption serverOption = new ServerOption("192.168.100.197", 8021);
         inboundClientOption.addServerOption(serverOption);
         NettyInboundClient nettyInboundClient = new NettyInboundClient(inboundClientOption);
         nettyInboundClient.start();
 
-        while(serverOption.state()!= ConnectState.AUTHED){
+        while (serverOption.state().ordinal() < ConnectState.AUTHED.ordinal()) {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -36,8 +38,16 @@ public class FreeswitchEndPoint {
             }
             log.info("waiting for inbound client,server state:[{}]", serverOption.state());
         }
+        this.nettyInboundClient = nettyInboundClient;
         String id = nettyInboundClient.sendAsyncApiCommand("192.168.100.197:8021", "api", "version");
         log.info("api exe id :[{}]", id);
+    }
+
+    public void doubleCall(String callerNumber, String calleeNumber, String showNumber) {
+        String args = "{sip_h_X-MY-HEADER=2222}user/" + callerNumber + " &bridge({origination_caller_id_name=" + showNumber + ",origination_caller_id_number=" + showNumber + "}user/" + calleeNumber + ")";
+        log.info("call args:[{}]", args);
+        String callOutCommandId = nettyInboundClient.sendAsyncApiCommand("192.168.100.197:8021", "originate", args);
+        log.info("callOutCommandId :[{}]", callOutCommandId);
     }
 
 
