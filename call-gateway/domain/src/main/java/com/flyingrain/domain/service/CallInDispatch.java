@@ -24,7 +24,7 @@ public class CallInDispatch implements ACDHandler {
         String agentNumber = callSettingManager.findAgent(callInInfo.getPhone());
         if (StringUtils.isEmpty(agentNumber)) {
             CallRecord callRecord = callRecordManager.getCallRecord(callInInfo.getPhone());
-            agentNumber = callRecord==null ? "1003" : callRecord.getCallerNumber();
+            agentNumber = callRecord==null ? "1001" : callRecord.getCallerNumber();
         }
         UserInfo userInfo = new UserInfo();
         userInfo.setRegisterNumber(agentNumber);

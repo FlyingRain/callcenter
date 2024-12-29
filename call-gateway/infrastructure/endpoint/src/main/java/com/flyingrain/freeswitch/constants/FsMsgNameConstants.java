@@ -1,4 +1,4 @@
-package com.flyingrain.freeswitch.model;
+package com.flyingrain.freeswitch.constants;
 
 public class FsMsgNameConstants {
 
@@ -14,6 +14,8 @@ public class FsMsgNameConstants {
 
     public static final String CHANNEL_NAME = "Channel-Name";
 
+    public static final String SIP_CALL_ID = "variable_sip_call_id";
+
     public static final String EVENT_TIME = "Event-Date-Timestamp";
 
     public static final String CHANNEL_DIRECTION = "Channel-Direction";
@@ -26,8 +28,9 @@ public class FsMsgNameConstants {
 
     public static final String CHANNEL_HANGUP_TIME = "Channel-Channel-Hangup-Time";
 
-    public static final String CONTENT_TYPE =  "Content-Type";
+    public static final String CONTENT_TYPE = "Content-Type";
 
     public static final String REPLY_TEXT = "Reply-Text";
+
 
 }

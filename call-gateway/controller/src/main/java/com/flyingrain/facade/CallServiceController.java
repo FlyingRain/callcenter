@@ -3,6 +3,7 @@ package com.flyingrain.facade;
 import com.flyingrain.domain.models.CallRecord;
 import com.flyingrain.domain.models.CallSetting;
 import com.flyingrain.domain.models.CommonResult;
+import com.flyingrain.domain.models.TransferRequest;
 import com.flyingrain.domain.service.CallOutManager;
 
 import com.flyingrain.domain.service.CallSettingManager;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CallServiceController {
 
     @Autowired
-    private CallOutManager callService;
+    private CallOutManager callOutManager;
 
     @Autowired
     private CallSettingManager callSettingManager;
@@ -28,13 +29,19 @@ public class CallServiceController {
         if ("17626189012".equals(callRecord.getCalleeNumber())) {
             callRecord.setCalleeNumber("1002");
         }
-        return callService.makeCall(callRecord);
+        return callOutManager.makeCall(callRecord);
     }
 
 
     @PostMapping("/callSettings")
     public CommonResult<Boolean> callSettings(@RequestBody CallSetting callSetting) {
         return CommonResult.success(callSettingManager.managerSetting(callSetting));
+    }
+
+    @PostMapping("/transfer")
+    public CommonResult<Boolean> transfer(@RequestBody TransferRequest transferRequest) {
+        log.info("transfer call:[{}]", transferRequest);
+        return callOutManager.transfer(transferRequest);
     }
 
 
