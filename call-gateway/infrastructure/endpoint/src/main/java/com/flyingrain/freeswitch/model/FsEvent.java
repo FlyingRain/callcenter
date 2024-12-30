@@ -1,5 +1,6 @@
 package com.flyingrain.freeswitch.model;
 
+import com.flyingrain.freeswitch.constants.FsMsgNameConstants;
 import link.thingscloud.freeswitch.esl.transport.event.EslEvent;
 import lombok.Data;
 import lombok.ToString;
@@ -40,6 +41,10 @@ public class FsEvent {
 
     private Date channelHangupTime;
 
+    private String sipCallId;
+
+    private String channelName;
+
     private Map<String, String> variables;
 
     public static FsEvent fromMap(Map<String, String> headers) {
@@ -56,8 +61,11 @@ public class FsEvent {
         event.setChannelHangupTime(parseDate(headers.get(FsMsgNameConstants.CHANNEL_HANGUP_TIME)));
         event.setNetworkAddr(headers.get(FsMsgNameConstants.NETWORK_ADDR));
         event.setChannelUniqueId(headers.get(FsMsgNameConstants.CHANNEL_ID));
+        event.setSipCallId(headers.get(FsMsgNameConstants.SIP_CALL_ID));
+        event.setChannelName(headers.get(FsMsgNameConstants.CHANNEL_NAME));
         return event;
     }
+
 
     public static FsEvent fromESLEvent(EslEvent event) {
         return fromMap(event.getEventHeaders());

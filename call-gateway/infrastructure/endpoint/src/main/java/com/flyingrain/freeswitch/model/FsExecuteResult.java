@@ -1,5 +1,6 @@
 package com.flyingrain.freeswitch.model;
 
+import com.flyingrain.freeswitch.constants.FsMsgNameConstants;
 import lombok.Data;
 import lombok.ToString;
 
