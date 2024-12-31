@@ -18,7 +18,6 @@ public class CallSettingManager {
     private Map<String, String> showNumberMap = new ConcurrentHashMap<>();
 
     public Boolean managerSetting(CallSetting callSetting) {
-        showNumberMap.put(callSetting.getCurrentAgent(), callSetting.getShowNumber());
         List<CallInSetting> callInSettings = callSetting.getCallInMap();
         if (!CollectionUtils.isEmpty(callInSettings)) {
             callSettingMap = callInSettings.stream().collect(Collectors.toMap(CallInSetting::getCallInNumber,CallInSetting::getAgent));

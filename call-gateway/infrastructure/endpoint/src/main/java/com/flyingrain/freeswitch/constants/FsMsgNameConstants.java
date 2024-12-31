@@ -4,7 +4,7 @@ public class FsMsgNameConstants {
 
     public static final String EVENT_NAME = "Event-Name";
 
-    public static final String CHANNEL_ID = "Channel-Unique-ID";
+    public static final String CHANNEL_ID = "Channel-Call-UUID";
 
     public static final String CALLER_NAME = "Caller-Caller-ID-Name";
 

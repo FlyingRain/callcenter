@@ -17,7 +17,7 @@ public class FsChannelSessionManager {
 
     private Map<String, FsSession> callingSessions = new ConcurrentHashMap<>(32);
 
-    private Logger logger = LoggerFactory.getLogger(FsChannelSessionManager.class);
+    private final  Logger logger = LoggerFactory.getLogger(FsChannelSessionManager.class);
 
     @EventListener(ChannelAnswerEvent.class)
     public void onChannelAnswer(ChannelAnswerEvent channelAnswerEvent) {
