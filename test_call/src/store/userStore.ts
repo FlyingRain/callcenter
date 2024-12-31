@@ -3,16 +3,13 @@ import {ref, reactive, computed} from 'vue'
 import {useRouter} from 'vue-router'
 
 export const userStore = defineStore('userStore', () => {
-    let user = reactive({name: '', age: ''})
+    let user = reactive({name: '', age: '', number: '', pwd: '', showNumber: ''})
     let age = ref(18)
     const router = useRouter()
 
-    function login() {
+    function login(data: any) {
         console.log('login')
-        user.name = 'wally'
-        age.value += 1
-        console.log(age.value)
-        router.push('/record')
+        router.push('/callwindow')
     }
 
     let doubleAge = computed(() => {

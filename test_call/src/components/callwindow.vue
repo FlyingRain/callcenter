@@ -26,8 +26,8 @@
     <div style="display: flex;justify-content:center;min-width: 100vh;min-height: 100vh;">
       <div style="width: 30%">
         <p>外显号码设置</p>
-        <el-input size="default" placeholder="设置要显示的号码" style="width: 200px" v-model="callSettings.showNumber"
-                  @blur="changeSetting"/>
+        <el-input size="default" placeholder="设置要显示的号码" style="width: 200px" v-model="user.showNumber"
+        />
       </div>
       <div style="border:  2px solid black;min-height: 100vh;margin: 10px">
       </div>
@@ -80,21 +80,30 @@ import JsSIP from 'jssip'
 import {URI} from "jssip";
 import useCall from '@/hooks/call/useCall'
 import calltip from "@/components/calltip.vue"
+import {userStore} from "@/store/userStore";
+import {callStore} from "@/store/callStore";
+import {storeToRefs} from "pinia";
+import {makeCall, callSetting, transfer} from '@/api/callApi'
+
+const {getCurrentCallId} = callStore()
 
 const draggable = ref()
 const {dragStart} = useDrag(draggable)
+const store = userStore()
+const {user} = storeToRefs(store)
+console.log(user)
 
 var socket = new JsSIP.WebSocketInterface('ws:/192.168.100.197:5066');
 // var socket = new JsSIP.WebSocketInterface('ws:/111.231.64.229:5896');
 //5896
-let uri = new URI("sip", '1003', '192.168.100.197', 5066);
+let uri = new URI("sip", user.value.number, '192.168.100.197', 5066);
 // let uri = new URI("sip", '1003', '111.231.64.229', 5896);
 let tip = ref()
 
 var configuration = {
   sockets: [socket],
   uri: uri.toString(),
-  password: '1234',
+  password: user.value.pwd,
   contact_uri: '',
   register: true
 };
@@ -102,7 +111,7 @@ uri.setParam('transport', 'ws')
 configuration.contact_uri = uri.toString()
 let audio = ref()
 
-const {connectFS, makeCall, hangup, accept} = useCall()
+const {connectFS, hangup, accept} = useCall()
 connectFS(configuration, (callInNumber: string, autoReceive: boolean) => {
   if (autoReceive) {
     accept(audio.value)
@@ -120,7 +129,15 @@ function callTips() {
 }
 
 function call(number: string) {
-  makeCall(number, audio.value)
+  let showNumber = user.value.showNumber
+  if (!showNumber) {
+    showNumber = user.value.number
+  }
+  makeCall({
+    callerNumber: user.value.number,
+    calleeNumber: number,
+    showNumber: showNumber
+  })
 }
 
 // let callSession = makeCall('sip:1002@192.168.0.116')
@@ -129,7 +146,9 @@ function call(number: string) {
 let callSettings = ref({showNumber: '', callInMap: [{callInNumber: '', agent: ''}]})
 
 function changeSetting() {
-
+  callSetting({
+    callInMap: callSettings.value.callInMap
+  })
 }
 
 function addCallInMap() {
@@ -143,8 +162,11 @@ function deleteCallInMap(item: any) {
 
 let transferNumber = ref('')
 
-function transferCall(){
-
+function transferCall() {
+  transfer({
+    callId: getCurrentCallId(),
+    targetNumber: transferNumber.value,
+  })
 }
 
 </script>

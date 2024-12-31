@@ -4,7 +4,7 @@ import type {OutgoingAckEvent} from "jssip/lib/RTCSession";
 import type {RTCSessionEvent} from "jssip/lib/UA";
 
 export default function () {
-    const {setCallSession, getCallSession, setUA, getUA} = callStore()
+    const {setCallSession, getCallSession, setUA, getUA, setCurrentCallId} = callStore()
     let coolPhone = getUA()
 
     function connectFS(callConfig: any, callIn: Function) {
@@ -25,14 +25,14 @@ export default function () {
         // 当有呼入或者呼出的事件时触发
         coolPhone.on('newRTCSession', function (e: RTCSessionEvent) {
             const {originator, session, request} = e
+            let callId = request.getHeader("Call-ID")
+            console.log('callId:', callId)
+            setCurrentCallId(callId)
             setCallSession(session)
             if (originator === 'local') {
                 console.log('call outcome!');
             } else if (originator === 'remote') {
-                console.log("call in ", session)
-                console.log("call in header:", request.getHeader("X-My-Header"), request.getHeaders("X-My-Header"))
                 callIn((session as any)._request?.from.uri.user, request.getHeader("X-My-Header") === "2222")
-                console.log('call income!', originator);
             }
             console.log('newRTCSession!', e);
         })
