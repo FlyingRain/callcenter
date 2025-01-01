@@ -24,6 +24,10 @@ let router = createRouter({
                     component: () => import('@/pages/record.vue')
                 }
             ]
+        },
+        {
+            path: '/',
+            redirect: '/index',
         }
         ]
     })

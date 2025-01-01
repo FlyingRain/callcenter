@@ -17,7 +17,11 @@ public class CallRecordManager {
     }
 
     public void putRecord(CallRecord callRecord) {
+        String calleeNumber = callRecord.getCalleeNumber();
+        if ("1002".equals(calleeNumber)) {
+            calleeNumber = "17626189012";
+        }
+        callTrace.put(calleeNumber, callRecord);
 
-        callTrace.put(callRecord.getCalleeNumber(), callRecord);
     }
 }

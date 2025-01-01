@@ -2,10 +2,9 @@ import JsSIP from "jssip";
 import {callStore} from "@/store/callStore";
 import type {OutgoingAckEvent} from "jssip/lib/RTCSession";
 import type {RTCSessionEvent} from "jssip/lib/UA";
-import type {Ref} from "vue";
 
 export default function () {
-    const {setCallSession, getCallSession, setUA, getUA} = callStore()
+    const {setCallSession, getCallSession, setUA, getUA, setCurrentCallId} = callStore()
     let coolPhone = getUA()
 
     function connectFS(callConfig: any, callIn: Function) {
@@ -25,16 +24,17 @@ export default function () {
 
         // 当有呼入或者呼出的事件时触发
         coolPhone.on('newRTCSession', function (e: RTCSessionEvent) {
-            const {originator, session} = e
+            const {originator, session, request} = e
+            let callId = request.getHeader("Call-ID")
+            console.log('callId:', callId)
+            setCurrentCallId(callId)
+            setCallSession(session)
             if (originator === 'local') {
                 console.log('call outcome!');
             } else if (originator === 'remote') {
-                console.log("call in ", session)
-                callIn((session as any)._request?.from.uri.user)
-                console.log('call income!', originator);
+                callIn((session as any)._request?.from.uri.user, request.getHeader("X-My-Header") === "2222")
             }
             console.log('newRTCSession!', e);
-            setCallSession(session)
         })
 
 
@@ -63,7 +63,14 @@ export default function () {
             'sessionTimersExpires': 120,
             'mediaConstraints': {'audio': true, 'video': false}
         }
-        coolPhone.call(number, options)
+        let pcConfig = {
+            iceServers: [
+                {
+                    urls: "stun:stun.l.google.com:19302",
+                },
+            ],
+        }
+        coolPhone.call(number, options, pcConfig)
     }
 
 
@@ -76,12 +83,13 @@ export default function () {
             receivers.forEach((rec: any) => stream.addTrack(rec.track));
         }
         if (audioRef) {
+            console.log('audio:', audioRef)
             audioRef.srcObject = stream;
             audioRef.play();
         }
     }
 
-    function accept(audioRef:any) {
+    function accept(audioRef: any) {
         let currentSession = getCallSession()
         currentSession.answer({
             mediaConstraints: {audio: true, video: false}
@@ -90,19 +98,8 @@ export default function () {
             console.log('callin ended!', e)
         })
 
-        currentSession.on('progress', function(e:any) {
+        currentSession.on('progress', function (e: any) {
             console.log('callin progress', e);
-            // 获取自定义变量
-            let vars = e.data.headers['Variables'];
-            if (vars) {
-                // 解析变量
-                let customVars = vars.split(';').reduce((acc:any, pair:any) => {
-                    let [key, value] = pair.split('=');
-                    acc[key] = value;
-                    return acc;
-                }, {});
-                console.log('自定义变量:', customVars);
-            }
         });
         currentSession.on('confirmed', function (e: any) {
             console.log('callin confirmed!', e)

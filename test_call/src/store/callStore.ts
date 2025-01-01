@@ -7,6 +7,8 @@ export const callStore = defineStore("callStore", () => {
 
     let currentUA: any = undefined;
 
+    let currentCallId = '';
+
     function setCallSession(session: any) {
         callSession = session
     }
@@ -23,6 +25,13 @@ export const callStore = defineStore("callStore", () => {
         return currentUA
     }
 
-    return {callSession, setCallSession, getCallSession, setUA,getUA}
+    function setCurrentCallId(callId:string){
+        currentCallId = callId
+    }
+
+    function getCurrentCallId():string {
+        return currentCallId
+    }
+    return {callSession, setCallSession, getCallSession, setUA,getUA,getCurrentCallId,setCurrentCallId}
 
 })

@@ -4,10 +4,13 @@ import com.flyingrain.domain.ACDHandler;
 import com.flyingrain.domain.CallService;
 import com.flyingrain.domain.models.CallInInfo;
 import com.flyingrain.domain.models.CallRecord;
+import com.flyingrain.domain.models.TransferRequest;
 import com.flyingrain.domain.models.UserInfo;
+import com.flyingrain.freeswitch.FsChannelSessionManager;
 import com.flyingrain.freeswitch.FsCommandExecuteHelper;
 import com.flyingrain.freeswitch.inbound.starter.FreeswitchEndPoint;
 import com.flyingrain.freeswitch.model.FsEvent;
+import com.flyingrain.freeswitch.model.FsSession;
 import com.flyingrain.freeswitch.outbound.FsCallInListener;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +29,9 @@ public class FreeswitchCallAdapter implements FsCallInListener, CallService {
 
     @Autowired
     private FreeswitchEndPoint freeswitchEndPoint;
+
+    @Autowired
+    private FsChannelSessionManager fsChannelSessionManager;
 
     @Override
     public void onCallIn(FsEvent fsEvent, FsCommandExecuteHelper executeHelper) {
@@ -47,4 +53,12 @@ public class FreeswitchCallAdapter implements FsCallInListener, CallService {
     public void makeCall(CallRecord callRecord) {
         freeswitchEndPoint.doubleCall(callRecord.getCallerNumber(), callRecord.getCalleeNumber(), callRecord.getShowNumber());
     }
+
+    @Override
+    public void transferCall(TransferRequest transferRequest) {
+        FsSession fsSession = fsChannelSessionManager.getCallingSessionByCallId(transferRequest.getCallId());
+        freeswitchEndPoint.transferCall(fsSession.getChannelUniqueId(), transferRequest.getTargetNumber());
+    }
+
+
 }
