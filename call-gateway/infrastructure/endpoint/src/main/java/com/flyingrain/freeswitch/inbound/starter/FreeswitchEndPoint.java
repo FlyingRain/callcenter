@@ -36,6 +36,7 @@ public class FreeswitchEndPoint {
         inboundClientOption.addListener(eslEventListener);
         inboundClientOption.addEvents("CHANNEL_HANGUP_COMPLETE", "CHANNEL_ANSWER", "BACKGROUND_JOB", "CHANNEL_CREATE");
         ServerOption serverOption = new ServerOption(freeswitchConfig.getFsInboundAddr(), freeswitchConfig.getFsInboundPort());
+        serverOption.password("FlyingRain");
         inboundClientOption.addServerOption(serverOption);
         NettyInboundClient nettyInboundClient = new NettyInboundClient(inboundClientOption);
         nettyInboundClient.start();
