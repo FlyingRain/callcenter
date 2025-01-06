@@ -17,4 +17,7 @@ public class FreeswitchConfig {
     @Value("${fs.inbound.pwd:ClueCon}")
     private String fsInboundPwd;
 
+    @Value("${fs.outbound.port:8081}")
+    private Integer fsOutboundPort;
+
 }

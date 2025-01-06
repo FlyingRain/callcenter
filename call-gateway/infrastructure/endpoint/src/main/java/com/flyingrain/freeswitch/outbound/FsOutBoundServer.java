@@ -1,6 +1,7 @@
 package com.flyingrain.freeswitch.outbound;
 
 import com.flyingrain.freeswitch.adapter.FreeswitchCallAdapter;
+import com.flyingrain.freeswitch.configs.FreeswitchConfig;
 import com.flyingrain.freeswitch.outbound.configs.OutboundServerConfig;
 import com.flyingrain.freeswitch.outbound.handlers.FsOutboundHandler;
 import io.netty.bootstrap.ServerBootstrap;
@@ -25,7 +26,8 @@ public class FsOutBoundServer   {
 
     private ServerBootstrap bootstrap;
 
-    private OutboundServerConfig config;
+    @Autowired
+    private FreeswitchConfig config;
 
     @Autowired
     private FreeswitchCallAdapter callAdapter;
@@ -34,6 +36,7 @@ public class FsOutBoundServer   {
     @PostConstruct
     public void init() throws IOException {
         bootstrap = new ServerBootstrap();
+        log.info("outbound server start on port:[{}]",config.getFsOutboundPort());
         bootstrap.group(new NioEventLoopGroup(4))
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
@@ -53,7 +56,7 @@ public class FsOutBoundServer   {
 //                        });
                         ch.pipeline().addLast("eslOutboundHandler", new FsOutboundHandler(callAdapter));
                     }
-                }).bind(8081);
+                }).bind(config.getFsOutboundPort());
     }
 
 }

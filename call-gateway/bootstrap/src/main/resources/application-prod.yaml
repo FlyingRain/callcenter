@@ -1,5 +1,7 @@
 fs:
   inbound:
-    addr: 192.168.100.197
+    addr: 111.231.64.229
     port: 8021
     pwd: FlyingRain
+  outbound:
+    port: 8111
