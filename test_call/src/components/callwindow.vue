@@ -45,6 +45,8 @@
             <el-select v-model="item.agent" style="width: 200px" placeholder="选择坐席">
               <el-option label="普罗米修斯" key="1" value="1003"/>
               <el-option label="阿波罗" key="2" value="1001"/>
+              <el-option label="CHATGPT" key="3" value="9999"/>
+              <el-option label="人工智障" key="4" value="1399"/>
             </el-select>
             <el-button @click="deleteCallInMap(item)">删除</el-button>
           </div>
@@ -93,11 +95,11 @@ const store = userStore()
 const {user} = storeToRefs(store)
 console.log(user)
 
-var socket = new JsSIP.WebSocketInterface('ws:/192.168.100.197:5066');
-// var socket = new JsSIP.WebSocketInterface('ws:/111.231.64.229:5896');
+// var socket = new JsSIP.WebSocketInterface('ws:/192.168.100.197:5066');
+var socket = new JsSIP.WebSocketInterface('ws:/111.231.64.229:5896');
 //5896
-let uri = new URI("sip", user.value.number, '192.168.100.197', 5066);
-// let uri = new URI("sip", '1003', '111.231.64.229', 5896);
+// let uri = new URI("sip", user.value.number, '192.168.100.197', 5066);
+let uri = new URI("sip", user.value.number, '111.231.64.229', 5896);
 let tip = ref()
 
 var configuration = {

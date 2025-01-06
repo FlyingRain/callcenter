@@ -91,9 +91,12 @@ export default function () {
 
     function accept(audioRef: any) {
         let currentSession = getCallSession()
+        console.log('start to answer call')
         currentSession.answer({
             mediaConstraints: {audio: true, video: false}
         })
+        console.log('end answer call')
+
         currentSession.on('ended', function (e: any) {
             console.log('callin ended!', e)
         })
